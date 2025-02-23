@@ -1,7 +1,7 @@
-- Reduce size of PDFs, see what is acceptable size (not 0.5 GB per PDF if possible).
 - Polish screenshot notification
 - Add user wait feedback when processing screenshot
 - Give user feedback if page > 32700 pixels OR create >1 page.
+- Reduce size of PDFs, see what is acceptable size (not 0.5 GB per PDF if possible).
 - Make open-source, and share with people online (get user feedback)
 - Add support to only take screenshot of active viewport
 - Add support to take screenshots by scrolling across the page, and taking screenshots.

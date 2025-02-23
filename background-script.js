@@ -41,34 +41,38 @@ function contentScrollToTop() {
 
 /**
  * @brief Add a temporary notification that a screenshot was made to the html page.
- * @param {string} imageSrc The URI of the image that was taken.
+ * @param {string} state The current state of the program (processing, success, failure). 
+ * @param {string} text The text to display in the notification header.
+ * @param {object} options Additional info needed by the notification.
+ * @param {object} options.image The URI of the image to display.
+ * @param {object} options.warning The warning to give to the user.
  */
-function contentNotify(imageSrc) {
-    // TODO: Make more complex if needed (with buttons to confirm, text, etc.)
+function contentNotify(state, text, options) {
+    let header = document.getElementById("spdf-header");
+    header.innerText = text;
 
-    const shotImage = document.createElement("img");
-    shotImage.setAttribute("src", imageSrc);
-    shotImage.style.position = "fixed";
-    shotImage.style.top = "20px";
-    shotImage.style.right = "20px";
-    shotImage.style.zIndex = 9999999;
+    let checkmark = document.getElementById("spdf-checkmark");
+    let spinner = document.getElementById("spdf-spinner");
 
-    shotImage.style.width = "auto"
-    shotImage.style.maxWidth = "33vw";
-    shotImage.style.maxHeight = "95vh";
-    shotImage.style.objectFit = "contain";
-    shotImage.style.objectPosition = "top";
+    switch (state) {
+        case "processing":
+            checkmark.style.display = "none";
+            spinner.style.display = "inline-block";
+            break;
 
-    shotImage.style.borderRadius = "8px";
-    // shotImage.style.border = "thin solid red";
-    shotImage.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
+        case "success":
+            spinner.style.display = "none";
+            checkmark.style.display = "inline-block";
+            break;
+    
+        case "failure":
+            spinner.style.display = "none";
+            checkmark.style.display = "none";
+            break;
 
-    shotImage.className = "screenshot-image";
-    document.body.appendChild(shotImage);
-
-    setTimeout(() => {
-        document.body.removeChild(shotImage);
-    }, 5000)
+        default:
+            break;
+    }
 }
 
 
@@ -103,13 +107,27 @@ async function scrollToTop(tab) {
     return result;
 }
 
-async function notify(tab, imageSrc) {
-    let result = await browser.scripting.executeScript({ 
-        args: [imageSrc],
+async function injectNotify(tab) {
+    let cssresult = await browser.scripting.insertCSS({ 
+        files: ["./content/content-style.css"],
+        target: { tabId: tab.id }
+    });
+
+    let jsresult = await browser.scripting.executeScript({ 
+        files: ["./content/content-notify.js"],
+        target: { tabId: tab.id }
+    });
+}
+
+async function notify(tab, state, text, options) {
+    let jsresult = await browser.scripting.executeScript({ 
+        args: [state, text, options],
         func: contentNotify,
         target: { tabId: tab.id }
     });
-    return result;
+    // DEBUG: see each step.
+    await new Promise(r => setTimeout(r, 2000));
+    return jsresult;
 }
 
 async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
@@ -154,8 +172,8 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
     pdf.text(text, 0, 0, { renderingMode: "invisible", lineHeightFactor: 0 });
     
     /* Save the PDF file. */
-    let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
-    pdf.save(filename);
+    // let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
+    // pdf.save(filename);
 }
 
 async function takeScreenshot(tab) {
@@ -164,6 +182,11 @@ async function takeScreenshot(tab) {
     // NOTE: Adding custom side margins might mess with content that has absolute positioning.
     // Let the user resize the window itself via the popup and indicate with an overlay (change between red, green, etc.) if the window needs to be wider / smaller.
     // Luxury feature, not really needed
+
+    /* Inject Notification DOM elements (hidden). */
+    await injectNotify(tab);
+
+    await notify(tab, "processing", "Setting up page");
 
     /* Step 1: Move to the top of the page (makes sure sticky elements are correct). */
     await scrollToTop(tab);
@@ -179,6 +202,7 @@ async function takeScreenshot(tab) {
     
     /* Step 3: Take the screenshot. */
     let imageUri;
+    await notify(tab, "processing", "Taking Screenshot");
     try {
         imageUri = await browser.tabs.captureVisibleTab(tab.windowId, {
             rect: { x: 0, y: 0, width: pageSize.width, height: pageSize.height }
@@ -187,17 +211,17 @@ async function takeScreenshot(tab) {
         console.log("Getting Screenshot: ", err);
     } 
 
-    /* Step 4: Notify the user of taken screenshot. */
-    await notify(tab, imageUri);
-
     /* Step 5: Convert the screenshot to PDF. */
     let imageText = await getPageText(tab);
 
+    await notify(tab, "processing", "Saving PDF");
     try {
         await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
     } catch(err) {
         console.log("Saving as PDF: ", err);
-    } 
+    }
+
+    await notify(tab, "success", "Saved PDF File", {image: imageUri});
 }
 
 

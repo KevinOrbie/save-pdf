@@ -1,0 +1,83 @@
+
+/* ================================ Notify Container =============================== */
+#spdf-notify-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 32ch;
+    padding: 1ch;
+
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 99999999;
+
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    border-radius: 1ch;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#spdf-header {
+    color: white;
+}
+
+/* =================================== Icons =================================== */
+#spdf-icon {
+    display: flex;
+    margin-right: 1.5ch;
+}
+
+/* Checkmark Icon */
+#spdf-checkmark {
+    display: inline-block;
+    transform: rotate(45deg);
+    height: 2ch;
+    width: 2ch;
+    margin-left: 60%; 
+    margin-bottom: 0.5ch;
+    border-bottom: 0.2ch solid #78b13f;
+    border-right: 0.2ch solid #78b13f;
+}
+
+/* Spinner Icon */
+/* Link: https://loading.io/css/ */
+#spdf-spinner,
+#spdf-spinner div {
+  box-sizing: border-box;
+}
+#spdf-spinner {
+  display: none;
+  position: relative;
+  width: 2ch;
+  height: 2ch;
+}
+#spdf-spinner div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 2ch;
+  height: 2ch;
+  border: 2px solid white;
+  border-radius: 50%;
+  animation: spdf-spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: white transparent transparent transparent;
+}
+#spdf-spinner div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+#spdf-spinner div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+#spdf-spinner div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes spdf-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
