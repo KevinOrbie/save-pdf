@@ -196,8 +196,6 @@ async function takeScreenshot(tab) {
     /* Inject Notification DOM elements (hidden). */
     await injectNotify(tab);
 
-    await notify(tab, "processing", "Setting up page");
-
     /* Step 1: Move to the top of the page (makes sure sticky elements are correct). */
     await scrollToTop(tab);
 
@@ -212,7 +210,6 @@ async function takeScreenshot(tab) {
     
     /* Step 3: Take the screenshot. */
     let imageUri;
-    await notify(tab, "processing", "Taking Screenshot");
     try {
         imageUri = await browser.tabs.captureVisibleTab(tab.windowId, {
             rect: { x: 0, y: 0, width: pageSize.width, height: pageSize.height }
