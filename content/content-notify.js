@@ -17,55 +17,54 @@
     const notifyContainer = document.createElement("div");
     notifyContainer.id = "spdf-notify-container";
 
+    const headerContainer = document.createElement("div");
+    headerContainer.id = "spdf-header-container";
+    notifyContainer.appendChild(headerContainer);
+
     /* ------------------ Setup Icons ------------------ */
     const icon = document.createElement("div");
+    icon.className = "spdf-font";
     icon.id = "spdf-icon"
 
+    /* Spinner Icon */
     const spinner = document.createElement("div");
     spinner.id = "spdf-spinner";
+    spinner.className = "spdf-font";
     spinner.appendChild(document.createElement("div"));
     spinner.appendChild(document.createElement("div"));
     spinner.appendChild(document.createElement("div"));
     spinner.appendChild(document.createElement("div"));
     icon.appendChild(spinner);
 
+    /* Checkmark Icon */
     const checkmark = document.createElement("div");
     checkmark.id = "spdf-checkmark";
+    checkmark.className = "spdf-font";
     icon.appendChild(checkmark);
 
-    notifyContainer.appendChild(icon);
+    /* Cross Icon */
+    const cross = document.createElement("div");
+    cross.className = "spdf-font";
+    cross.id = "spdf-cross";
+    icon.appendChild(cross);
+
+    headerContainer.appendChild(icon);
 
     /* ------------------ Setup Header ----------------- */
     const header = document.createElement("span");
-    header.id = "spdf-header";
-    notifyContainer.appendChild(header);
+    header.className = "spdf-font";
+    header.id = "spdf-header-text";
+    headerContainer.appendChild(header);
 
     /* ----------------- Setup Warning ----------------- */
 
+
     /* ------------------ Setup Image ------------------ */
-
-    // const shotImage = document.createElement("img");
-    // shotImage.setAttribute("src", imageSrc);
-    // shotImage.style.position = "fixed";
-    // shotImage.style.top = "20px";
-    // shotImage.style.right = "20px";
-    // shotImage.style.zIndex = 9999999;
-
-    // shotImage.style.width = "auto"
-    // shotImage.style.maxWidth = "33vw";
-    // shotImage.style.maxHeight = "95vh";
-    // shotImage.style.objectFit = "contain";
-    // shotImage.style.objectPosition = "top";
-
-    // shotImage.style.borderRadius = "8px";
-    // shotImage.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
-
-    // shotImage.className = "screenshot-image";
-    // document.body.appendChild(shotImage);
-
-    // setTimeout(() => {
-    //     document.body.removeChild(shotImage);
-    // }, 5000)
+    const image = document.createElement("img");
+    image.setAttribute("src", "");
+    image.className = "spdf-font";
+    image.id = "spdf-image";
+    notifyContainer.appendChild(image);
 
     document.body.appendChild(notifyContainer);
 })();

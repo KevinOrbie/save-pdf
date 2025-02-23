@@ -48,30 +48,40 @@ function contentScrollToTop() {
  * @param {object} options.warning The warning to give to the user.
  */
 function contentNotify(state, text, options) {
-    let header = document.getElementById("spdf-header");
+    let header = document.getElementById("spdf-header-text");
     header.innerText = text;
 
     let checkmark = document.getElementById("spdf-checkmark");
     let spinner = document.getElementById("spdf-spinner");
+    let cross = document.getElementById("spdf-cross");
 
     switch (state) {
         case "processing":
             checkmark.style.display = "none";
+            cross.style.display = "none";
             spinner.style.display = "inline-block";
             break;
 
         case "success":
             spinner.style.display = "none";
+            cross.style.display = "none";
             checkmark.style.display = "inline-block";
             break;
     
         case "failure":
             spinner.style.display = "none";
             checkmark.style.display = "none";
+            cross.style.display = "inline-block";
             break;
 
         default:
             break;
+    }
+
+    if (options && options.hasOwnProperty('image')) {
+        let image = document.getElementById("spdf-image");
+        image.setAttribute("src", options["image"]);
+        image.style.display = "block";
     }
 }
 
@@ -221,7 +231,8 @@ async function takeScreenshot(tab) {
         console.log("Saving as PDF: ", err);
     }
 
-    await notify(tab, "success", "Saved PDF File", {image: imageUri});
+    await notify(tab, "success", "Saved PDF File", {"image": imageUri});
+    await notify(tab, "failure", "Failed to save PDF file!", {"image": imageUri});
 }
 
 
