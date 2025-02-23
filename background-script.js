@@ -48,6 +48,9 @@ function contentScrollToTop() {
  * @param {object} options.warning The warning to give to the user.
  */
 function contentNotify(state, text, options) {
+    let container = document.getElementById("spdf-notify-container");
+    container.style.display = "flex";
+
     let header = document.getElementById("spdf-header-text");
     header.innerText = text;
 
@@ -78,10 +81,22 @@ function contentNotify(state, text, options) {
             break;
     }
 
+    /* Set Image */
     if (options && options.hasOwnProperty('image')) {
         let image = document.getElementById("spdf-image");
         image.setAttribute("src", options["image"]);
         image.style.display = "block";
+    }
+
+    /* Set Warning if non-emtpy */
+    if (options && options.hasOwnProperty('warning') && options["warning"]) {
+        let warningText = document.getElementById("spdf-warning-text");
+        warningText.innerText = options["warning"];
+        let warning = document.getElementById("spdf-warning-container");
+        warning.style.display = "block";
+    } else {
+        let warning = document.getElementById("spdf-warning-container");
+        warning.style.display = "none";
     }
 }
 
@@ -187,6 +202,8 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
 }
 
 async function takeScreenshot(tab) {
+    let warning = "";
+
     /* Step 0: (optional) Set the correct width of the browser window. */
     // NOTE: window.resizeTo only works for windows you created yourself, and when you only have 1 tab.
     // NOTE: Adding custom side margins might mess with content that has absolute positioning.
@@ -204,7 +221,7 @@ async function takeScreenshot(tab) {
 
     // Deal with too long pages (Ex. https://en.wikipedia.org/wiki/United_States)
     if (pageSize.height > 32700) {
-        console.log("WARNING: Page longer than 32700 pixels, cropping image size.");
+        warning = `Web page longer than 32700 pixels, cropping image height.`
         pageSize.height = 32700;
     }
     
@@ -221,15 +238,14 @@ async function takeScreenshot(tab) {
     /* Step 5: Convert the screenshot to PDF. */
     let imageText = await getPageText(tab);
 
-    await notify(tab, "processing", "Saving PDF");
+    await notify(tab, "processing", "Saving PDF", {"warning": warning});
     try {
         await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
     } catch(err) {
         console.log("Saving as PDF: ", err);
     }
 
-    await notify(tab, "success", "Saved PDF File", {"image": imageUri});
-    await notify(tab, "failure", "Failed to save PDF file!", {"image": imageUri});
+    await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
 }
 
 

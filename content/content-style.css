@@ -1,14 +1,16 @@
 .spdf-font {
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.1;
 }
 
 
 /* ================================ Notify Container =============================== */
 #spdf-notify-container {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
+    max-height: 95vh;
     
     position: fixed;
     right: 20px;
@@ -20,6 +22,12 @@
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(2px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: auto;
+}
+
+#spdf-notify-container > :nth-child(n+2) {
+    margin-top: 1ch;
+    margin-bottom: 1ch;
 }
 
 #spdf-header-container {
@@ -66,7 +74,7 @@
 /* Cross Icon */
 /* Link: https://stackoverflow.com/questions/18611195/x-close-button-only-using-css */
 #spdf-cross {
-    display: inline-block;
+    display: none;
     width: 1ch;
     height: 2ch;
     margin-left: 1.5ch;
@@ -129,17 +137,37 @@
 
 
 /* ================================== Warning ================================== */
+#spdf-warning-container {
+    display: none;
+    background-color: #F8F4D5;
+    border-radius: 1ch;
+    border-top: 1ch;
+    padding: 1ch;
+    width: 30ch;
+    border: 2px solid #96722E;
+}
+
+#spdf-warning-header {
+    font-weight: bold;
+    color: #96722E;
+    margin: 0ch 0ch 5px 0ch;
+    line-height: 1.2;
+}
+
+#spdf-warning-text {
+    text-align: left;
+    color: #96722E;
+    margin: 0ch 0ch 0px 0ch;
+}
 
 
 /* =================================== Image =================================== */
 #spdf-image {
     display: none;
-    width: auto;
-    width: 32ch;
-    max-height: 90vh;
-    object-fit: contain;
-    object-position: top;
-    padding: 1ch;
+    width: 30ch;
+    object-fit: cover;
+    margin-left: 1ch;
+    margin-right: 1ch;
 
     border-radius: 1ch;
 }

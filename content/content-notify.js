@@ -57,7 +57,22 @@
     headerContainer.appendChild(header);
 
     /* ----------------- Setup Warning ----------------- */
+    const warningContainer = document.createElement("div");
+    warningContainer.id = "spdf-warning-container";
+    warningContainer.className = "spdf-font";
+    notifyContainer.appendChild(warningContainer);
 
+    const warningHeader = document.createElement("p");
+    warningHeader.id = "spdf-warning-header";
+    warningHeader.className = "spdf-font";
+    warningHeader.innerText = "Warning:";
+    const warningText = document.createElement("p");
+    warningText.id = "spdf-warning-text";
+    warningText.className = "spdf-font";
+    warningText.innerText = "This the explanation of this warning. It uses numbers and letters to bring accross a point.";
+
+    warningContainer.appendChild(warningHeader);
+    warningContainer.appendChild(warningText);
 
     /* ------------------ Setup Image ------------------ */
     const image = document.createElement("img");
