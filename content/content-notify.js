@@ -1,5 +1,8 @@
 /**
  * @brief Injects the save-pdf notification DOM elements into the webpage this is injected into.
+ * 
+ * @file content-notify.js
+ * @author Kevin Orbie
  */
 
 (() => {
@@ -64,7 +67,6 @@
     const warningContainer = document.createElement("div");
     warningContainer.id = "spdf-warning-container";
     warningContainer.className = "spdf-font";
-    contentContainer.appendChild(warningContainer);
 
     const warningHeader = document.createElement("p");
     warningHeader.id = "spdf-warning-header";
@@ -77,6 +79,8 @@
 
     warningContainer.appendChild(warningHeader);
     warningContainer.appendChild(warningText);
+
+    contentContainer.appendChild(warningContainer);
 
     /* ----------------- Setup Details ----------------- */
     const detailsContainer = document.createElement("div");

@@ -1,5 +1,16 @@
+/**
+ * @brief Main entrypoint for the Web Extension.
+ * 
+ * @file background-script.js
+ * @author Kevin Orbie
+ */
+
+/**
+ * @note jsPDF is used to generate PDF files.
+ * @note PDF.js is only meant to view and render pdf files, not create them.
+ */
 import "./libs/jspdf.umd.js" 
-// NOTE: PDF.js is only meant to view and render pdf files, not create them.
+
 
 /* ===================================== Content Functions ===================================== */
 // These functions are meant to be injected into a tab.
@@ -41,6 +52,7 @@ function contentScrollToTop() {
 
 /**
  * @brief Add a temporary notification that a screenshot was made to the html page.
+ * 
  * @param {string} state The current state of the program (processing, success, failure). 
  * @param {string} text The text to display in the notification header.
  * @param {object} options Additional info needed by the notification.
