@@ -266,7 +266,7 @@ async function takeScreenshot(tab) {
         warning += `Web page longer than 32700 pixels, cropping image height. `
         pageSize.height = 32700;
     }
-    
+
     /* Step 3: Take the screenshot. */
     let imageUri = undefined;
     try {
@@ -292,6 +292,7 @@ async function takeScreenshot(tab) {
 
     /* Step 5: Convert the screenshot to PDF. */
     await notify(tab, "processing", "Saving PDF", {"warning": warning});
+    await new Promise(r => setTimeout(r, 500));
 
     try {
         await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);

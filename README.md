@@ -1,14 +1,29 @@
 
 <h1 style="text-align: center">
 <sub>
-    <img src="./icons/save-pdf.svg" height="38" width="38" style="margin-right: 1ch">
+    <img src="./assets/icons/save-pdf.svg" height="38" width="38" style="margin-right: 1ch">
 </sub>
 Save PDF
 </h1>
 
 
 A browser extension that allows users to take a full-page screenshot of a web-page and save it as a PDF file. 
-It also adds the text content of the HTML page to the pdf file, to make it searchable.
+It also adds the text content of the HTML page to the pdf file, to make the PDF file searchable.
+
+## Gallery
+
+**Example** Usage:
+
+![Example Usage](./assets/docs/example-usage.gif)
+
+Associated **Context Menu** Option:
+
+![Context Menu](./assets/docs/context-menu.png)
+
+**Notication** Feedback Types:
+Processing Feedback |  Warning Feedback |  Failure Feedback |  Success Feedback
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![](./assets/docs/notify-processing.png)  |  ![](./assets/docs/notify-warning.png) |  ![](./assets/docs/notify-failure.png) |  ![](./assets/docs/notify-success.png)
 
 ## Usage
 1) Open any web-page
