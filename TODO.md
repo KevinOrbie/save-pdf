@@ -1,5 +1,3 @@
-- America Wiki: long image does not get propper width
-- Make long images scrollable, but only the image, make the rest stick (maybe using extra scrollable wrapper).
 - Remove the notication on click / after time.
 - Add details on failure
 - Animate opening of screenshot (slide down)
@@ -19,3 +17,5 @@ Finished:
 - Polish screenshot notification
 - Add user wait feedback when processing screenshot
 - Give user feedback if page > 32700 pixels OR create >1 page.
+- America Wiki: long image does not get propper width (Not fixed, but less important)
+- Make long images scrollable, but only the image, make the rest stick (maybe using extra scrollable wrapper).

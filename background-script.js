@@ -57,24 +57,28 @@ function contentNotify(state, text, options) {
     let checkmark = document.getElementById("spdf-checkmark");
     let spinner = document.getElementById("spdf-spinner");
     let cross = document.getElementById("spdf-cross");
+    let details = document.getElementById("spdf-details-container");
 
     switch (state) {
         case "processing":
             checkmark.style.display = "none";
             cross.style.display = "none";
             spinner.style.display = "inline-block";
+            details.style.display = "none";
             break;
 
         case "success":
             spinner.style.display = "none";
             cross.style.display = "none";
             checkmark.style.display = "inline-block";
+            details.style.display = "none";
             break;
     
         case "failure":
             spinner.style.display = "none";
             checkmark.style.display = "none";
             cross.style.display = "inline-block";
+            details.classList.add("spdf-details-container-error");
             break;
 
         default:
@@ -97,6 +101,27 @@ function contentNotify(state, text, options) {
     } else {
         let warning = document.getElementById("spdf-warning-container");
         warning.style.display = "none";
+    }
+
+    /* Set Details if non-emtpy */
+    if (options && options.hasOwnProperty('details') && options["details"]) {
+        details.innerText = options["details"];
+        details.style.display = "block";
+    } else {
+        details.style.display = "none";
+    }
+
+    /* Setup Automatic Notification Removal. */
+    if (state === "success" || state === "failure") {
+        setTimeout(() => {
+            // Hide Notification
+            let container = document.getElementById("spdf-notify-container");
+            container.style.display = "none";
+    
+            // Remove Image Data (free resources)
+            let image = document.getElementById("spdf-image");
+            image.setAttribute("src", "");
+        }, 2000);
     }
 }
 
@@ -204,47 +229,62 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
 async function takeScreenshot(tab) {
     let warning = "";
 
-    /* Step 0: (optional) Set the correct width of the browser window. */
-    // NOTE: window.resizeTo only works for windows you created yourself, and when you only have 1 tab.
-    // NOTE: Adding custom side margins might mess with content that has absolute positioning.
-    // Let the user resize the window itself via the popup and indicate with an overlay (change between red, green, etc.) if the window needs to be wider / smaller.
-    // Luxury feature, not really needed
+    /**
+     * @note Automatically setting the browser window width is not straightforward.
+     * @note Window.resizeTo only works for windows you created yourself, and when you only have 1 tab.
+     * @note Adding custom side margins might mess with content that has absolute positioning.
+     * @note A possible alternative: Let the user resize the window, help with an overlay (change between red, green, etc.).
+     */
 
-    /* Inject Notification DOM elements (hidden). */
+    /* Step 0: Inject Notification DOM elements (hidden). */
     await injectNotify(tab);
 
     /* Step 1: Move to the top of the page (makes sure sticky elements are correct). */
     await scrollToTop(tab);
 
     /* Step 2: Get the correct width / height form the active tab page. */
+    // Pages >32700 pixels can't be used with screenshots (Ex. https://en.wikipedia.org/wiki/United_States)
     let pageSize = await getPageSize(tab);
-
-    // Deal with too long pages (Ex. https://en.wikipedia.org/wiki/United_States)
     if (pageSize.height > 32700) {
-        warning = `Web page longer than 32700 pixels, cropping image height.`
+        warning += `Web page longer than 32700 pixels, cropping image height. `
         pageSize.height = 32700;
     }
     
     /* Step 3: Take the screenshot. */
-    let imageUri;
+    let imageUri = undefined;
     try {
         imageUri = await browser.tabs.captureVisibleTab(tab.windowId, {
             rect: { x: 0, y: 0, width: pageSize.width, height: pageSize.height }
         });
     } catch(err) {
-        console.log("Getting Screenshot: ", err);
-    } 
+        console.log("Failed to take screenshot! ", err);
+        await notify(tab, "failure", "Failed to take screenshot!", {"warning": warning, "details": err.toString()});
+        return;
+    }
+
+    /* Step 4: Read text content from PDF page. */
+    await notify(tab, "processing", "Extracting text content", {"warning": warning});
+
+    let imageText = "";
+    try {
+        imageText = await getPageText(tab);
+    } catch(err) {
+        console.log("Failed to get text from web page. ", err);
+        warning += "Failed to get text from web page. "
+    }
 
     /* Step 5: Convert the screenshot to PDF. */
-    let imageText = await getPageText(tab);
-
     await notify(tab, "processing", "Saving PDF", {"warning": warning});
+
     try {
         await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
     } catch(err) {
-        console.log("Saving as PDF: ", err);
+        console.log("Failed to save PDF! ", err);
+        await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
+        return;
     }
 
+    /* Notify user of succesfull save. */
     await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
 }
 

@@ -78,6 +78,12 @@
     warningContainer.appendChild(warningHeader);
     warningContainer.appendChild(warningText);
 
+    /* ----------------- Setup Details ----------------- */
+    const detailsContainer = document.createElement("div");
+    detailsContainer.id = "spdf-details-container";
+    detailsContainer.classList.add("spdf-font");
+    contentContainer.appendChild(detailsContainer);
+
     /* ------------------ Setup Image ------------------ */
     const image = document.createElement("img");
     image.setAttribute("src", "");

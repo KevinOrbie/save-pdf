@@ -165,6 +165,21 @@
     margin: 0ch 0ch 0px 0ch;
 }
 
+/* ================================== Details ================================== */
+#spdf-details-container {
+    display: none;
+    border-radius: 1ch;
+    border-top: 1ch;
+    padding: 1ch;
+    width: 30ch;
+}
+
+.spdf-details-container-error {
+    background-color: #FEE;
+    border: 2px solid #EDD;
+    color: #A66;
+}
+
 
 /* =================================== Image =================================== */
 #spdf-image {
