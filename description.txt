@@ -7,13 +7,13 @@ Safe PDF allows you to make a full-page screenshot of a web-page and save it as 
 Why is this useful?
 --------------------
 It allows users to save HTML pages "as they see them", while still making it possible to search based on text content in the PDF files.
-This stands in contrast to using "print as PDF", which almost always results in a heavily distored view of the web-page.
+This stands in contrast to using "print as PDF", which almost always results in a heavily distorted view of the web-page.
 
 Limitations: 
 --------------------
 - Long web-pages are not captured in their entirety (>32700 pixels long).
 - Dynamically loaded content can cause artifacts in resulting screenshots.
-- Some web-pages only show what is visible in the current viewport.
+- Some web-pages only show what is visible in the current view-port.
 
 Privacy: 
 --------------------
