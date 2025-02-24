@@ -121,7 +121,7 @@ function contentNotify(state, text, options) {
             // Remove Image Data (free resources)
             let image = document.getElementById("spdf-image");
             image.setAttribute("src", "");
-        }, 2000);
+        }, 3000);
     }
 }
 
@@ -175,8 +175,6 @@ async function notify(tab, state, text, options) {
         func: contentNotify,
         target: { tabId: tab.id }
     });
-    // DEBUG: see each step.
-    await new Promise(r => setTimeout(r, 2000));
     return jsresult;
 }
 
@@ -222,8 +220,8 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
     pdf.text(text, 0, 0, { renderingMode: "invisible", lineHeightFactor: 0 });
     
     /* Save the PDF file. */
-    // let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
-    // pdf.save(filename);
+    let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
+    pdf.save(filename);
 }
 
 async function takeScreenshot(tab) {

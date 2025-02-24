@@ -1,7 +1,4 @@
-- Remove the notication on click / after time.
-- Add details on failure
-- Animate opening of screenshot (slide down)
-- Reduce size of PDFs, see what is acceptable size (not 0.5 GB per PDF if possible).
+- Reduce size of PDFs, see what is acceptable size (default webpage should be 0.5MB, now 32 MB).
 - Update README & add screenshots to GitHub Page.
 - Make open-source, and share with people online (get user feedback)
 - Add support to only take screenshot of active viewport
@@ -19,3 +16,6 @@ Finished:
 - Give user feedback if page > 32700 pixels OR create >1 page.
 - America Wiki: long image does not get propper width (Not fixed, but less important)
 - Make long images scrollable, but only the image, make the rest stick (maybe using extra scrollable wrapper).
+- Remove the notication on click / after time.
+- Add details on failure
+- Animate opening of screenshot (slide down)
