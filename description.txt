@@ -1,0 +1,31 @@
+Easily make a full-page screenshot of a web-page and save it as a PDF file.
+
+Description
+--------------------
+Safe PDF allows you to make a full-page screenshot of a web-page and save it as a PDF file. This PDF file also contains the text content of the HTML page (but not at the actual text location in the screenshot).
+
+Why is this useful?
+--------------------
+It allows users to save HTML pages "as they see them", while still making it possible to search based on text content in the PDF files.
+This stands in contrast to using "print as PDF", which almost always results in a heavily distored view of the web-page.
+
+Limitations: 
+--------------------
+- Long web-pages are not captured in their entirety (>32700 pixels long).
+- Dynamically loaded content can cause artifacts in resulting screenshots.
+- Some web-pages only show what is visible in the current viewport.
+
+Privacy: 
+--------------------
+This browser extension runs fully in your local browser (i.e., it does NOT communicate with any external server).
+
+Permissions:
+--------------------
+- "activeTab": Needed to take the screenshot.
+- "contextMenus": Needed to add a custom option to the Context Menu (see GitHub).
+- "scripting": Needed to determine the height of the full web-page and to notify the user (see GitHub).
+- "tabs": Needed to get the title of the active tab, used in generating the PDF filename.
+
+Links:
+--------------------
+Source Code: https://github.com/KevinOrbie/save-pdf

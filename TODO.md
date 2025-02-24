@@ -1,5 +1,4 @@
-- Update README & add screenshots to GitHub Page.
-- Make open-source, and share with people online (get user feedback)
+- Make it available on Firefox Addon, and update README link.
 - Reduce size of PDFs from ~1MB to 0.5MB.
 - Add support to only take screenshot of active viewport
 - Add support to take screenshots by scrolling across the page, and taking screenshots.
