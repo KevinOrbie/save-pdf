@@ -1,13 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "SavePDF",
-  "version": "1.0",
+  "name": "Save PDF",
+  "version": "2.0",
 
-  "description": "Enables users to take full-page PDF screenshots with embedded text info.",
+  "description": "Enables users to take full-page PDF screenshots containing embedded text info.",
   "permissions": ["activeTab", "contextMenus", "scripting", "tabs"],
 
   "icons": {
-    "48": "icons/border-48.png"
+    "16": "icons/save-pdf.svg",
+    "32": "icons/save-pdf.svg",
+    "48": "icons/save-pdf.svg",
+    "64": "icons/save-pdf.svg",
+    "96": "icons/save-pdf.svg",
+    "128": "icons/save-pdf.svg"
   },
 
   "background": {
