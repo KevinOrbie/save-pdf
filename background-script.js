@@ -98,20 +98,21 @@ function contentNotify(state, text, options) {
     }
 
     /* Set Image */
+    let image = document.getElementById("spdf-image");
     if (options && options.hasOwnProperty('image')) {
-        let image = document.getElementById("spdf-image");
         image.setAttribute("src", options["image"]);
         image.style.display = "block";
+    } else {
+        image.style.display = "none";
     }
 
     /* Set Warning if non-emtpy */
+    let warning = document.getElementById("spdf-warning-container");
     if (options && options.hasOwnProperty('warning') && options["warning"]) {
         let warningText = document.getElementById("spdf-warning-text");
         warningText.innerText = options["warning"];
-        let warning = document.getElementById("spdf-warning-container");
         warning.style.display = "block";
     } else {
-        let warning = document.getElementById("spdf-warning-container");
         warning.style.display = "none";
     }
 
@@ -166,6 +167,7 @@ async function scrollToTop(tab) {
         func: contentScrollToTop,
         target: { tabId: tab.id }
     });
+    await new Promise(r => setTimeout(r, 500));  // Deal with elements that have transitions.
     return result;
 }
 

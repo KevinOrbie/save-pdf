@@ -1,7 +1,6 @@
-- Fix padding issue when calling save for the second time.
-- Reduce size of PDFs from ~1MB to 0.5MB.
 - Update README & add screenshots to GitHub Page.
 - Make open-source, and share with people online (get user feedback)
+- Reduce size of PDFs from ~1MB to 0.5MB.
 - Add support to only take screenshot of active viewport
 - Add support to take screenshots by scrolling across the page, and taking screenshots.
 - Add support to only to produce a PDF from multiple screenshots, accross multiple pages.
@@ -21,3 +20,4 @@ Finished:
 - Add details on failure
 - Animate opening of screenshot (slide down)
 - Reduce size of PDFs, see what is acceptable size (default webpage should be 0.5MB, now 32 MB).
+- Fix padding issue when calling save for the second time.
