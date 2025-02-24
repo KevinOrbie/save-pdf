@@ -217,7 +217,12 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
     });
 
     /* Generate PDF pages */
-    let pdf = new jsPDF({ unit: "mm", format: [pdfPageWidth, pdfPageHeight], orientation: (pdfPageWidth <= pdfPageHeight) ? "portrait" : "landscape" });
+    let pdf = new jsPDF({ 
+        unit: "mm", 
+        format: [pdfPageWidth, pdfPageHeight], 
+        compress: true, 
+        orientation: (pdfPageWidth <= pdfPageHeight) ? "portrait" : "landscape" 
+    });
     for (let pageIndex = 0; pageIndex < pdfNumPages; pageIndex++) {
         if (pageIndex > 0) {
             pdf.addPage([pdfPageWidth, pdfPageHeight])

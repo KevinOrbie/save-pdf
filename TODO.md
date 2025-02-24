@@ -1,4 +1,5 @@
-- Reduce size of PDFs, see what is acceptable size (default webpage should be 0.5MB, now 32 MB).
+- Fix padding issue when calling save for the second time.
+- Reduce size of PDFs from ~1MB to 0.5MB.
 - Update README & add screenshots to GitHub Page.
 - Make open-source, and share with people online (get user feedback)
 - Add support to only take screenshot of active viewport
@@ -19,3 +20,4 @@ Finished:
 - Remove the notication on click / after time.
 - Add details on failure
 - Animate opening of screenshot (slide down)
+- Reduce size of PDFs, see what is acceptable size (default webpage should be 0.5MB, now 32 MB).
