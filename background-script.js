@@ -7,7 +7,7 @@
 
 /**
  * @note jsPDF is used to generate PDF files.
- * @note PDF.js is only meant to view and render pdf files, not create them.
+ * @note Originally I tried to use PDF.js, but this is only meant to view and render pdf files, not create them.
  */
 import "./libs/jspdf.umd.js" 
 
