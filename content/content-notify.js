@@ -21,6 +21,10 @@
     headerContainer.id = "spdf-header-container";
     notifyContainer.appendChild(headerContainer);
 
+    const contentContainer = document.createElement("div");
+    contentContainer.id = "spdf-content-container";
+    notifyContainer.appendChild(contentContainer);
+
     /* ------------------ Setup Icons ------------------ */
     const icon = document.createElement("div");
     icon.className = "spdf-font";
@@ -60,7 +64,7 @@
     const warningContainer = document.createElement("div");
     warningContainer.id = "spdf-warning-container";
     warningContainer.className = "spdf-font";
-    notifyContainer.appendChild(warningContainer);
+    contentContainer.appendChild(warningContainer);
 
     const warningHeader = document.createElement("p");
     warningHeader.id = "spdf-warning-header";
@@ -79,7 +83,7 @@
     image.setAttribute("src", "");
     image.className = "spdf-font";
     image.id = "spdf-image";
-    notifyContainer.appendChild(image);
+    contentContainer.appendChild(image);
 
     document.body.appendChild(notifyContainer);
 })();

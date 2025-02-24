@@ -1,10 +1,10 @@
 - America Wiki: long image does not get propper width
-- Make long images scrollable, but only the image, make the rest stick.
-- Remove the notication on click
-- Possibly open last PDF.
+- Make long images scrollable, but only the image, make the rest stick (maybe using extra scrollable wrapper).
+- Remove the notication on click / after time.
+- Add details on failure
 - Animate opening of screenshot (slide down)
 - Reduce size of PDFs, see what is acceptable size (not 0.5 GB per PDF if possible).
-- Add screenshots GitHub Page.
+- Update README & add screenshots to GitHub Page.
 - Make open-source, and share with people online (get user feedback)
 - Add support to only take screenshot of active viewport
 - Add support to take screenshots by scrolling across the page, and taking screenshots.
