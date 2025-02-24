@@ -3,6 +3,10 @@
   "name": "Save PDF",
   "version": "2.0",
 
+  "gecko": {
+    "id": "c21057b1-24b3-46f8-8c10-9e66a60f9a23"
+  },
+
   "description": "Enables users to take full-page PDF screenshots containing embedded text info.",
   "permissions": ["activeTab", "contextMenus", "scripting", "tabs"],
 
