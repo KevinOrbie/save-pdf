@@ -32,7 +32,7 @@ button:hover {
 }
 
 .icon {
-    width: 100%;
+    height: 100%;
 }
 
 /* =================== Control Bar =================== */
@@ -46,6 +46,7 @@ button:hover {
 
 #button-container > button {
     background-color: var(--btn-faded);
+    flex-grow: 0.4;
 }
 
 #button-container > .selected {
@@ -59,14 +60,43 @@ button:hover {
 
 /* ================= Merge Container ================= */
 #merge-page-container {
-    width: 100%;
     box-sizing: border-box;
-    padding: 5px;
-    min-height: 45px;
-    max-height: 400px;
-    background-color: rgb(240, 240, 240);
+    width: 100%;
+    height: 160px;
     border-radius: 5px;
-    margin-top: 6px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 8px;
+    margin-bottom: 2px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#no-pages {
+    color: rgb(129, 129, 129);
+    width: 100%;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.merge-page {
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    overflow: hidden;
+    width: 100%;
+
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.merge-page:last-child { 
+    border-bottom: none; 
 }
 
 #merge-container > p {
@@ -74,14 +104,6 @@ button:hover {
     margin-top: 0px;
     margin-bottom: 7px;
     color: grey;
-}
-
-#no-pages {
-    color: rgb(179, 179, 179);
-    width: 100%;
-    text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 #merge-button-container {
@@ -92,15 +114,15 @@ button:hover {
     width: 100%;
 }
 
-#merge-cancel-btn {
+#btn-merge-cancel {
     background-color: #8f0000;
 }
 
-#merge-cancel-btn:hover {
+#btn-merge-cancel:hover {
     background-color: #c00000;
 }
 
-#merge-create-btn {
+#btn-merge-create {
     flex-grow: 1;
     margin-left: 5px;
 }
