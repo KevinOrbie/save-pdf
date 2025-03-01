@@ -1,0 +1,106 @@
+:root {
+    --btn-faded: #8ca2cc;
+    --btn-hover: #002d88;
+    --btn-default: #2450a7;
+}
+
+/* =================== Global Style ================== */
+html, body {
+    width: 200px;
+}
+
+button {
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px;
+    background-color: var(--btn-default);
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: var(--btn-hover);
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 2px;
+}
+
+.hidden {
+    display: none;
+}
+
+.icon {
+    width: 100%;
+}
+
+/* =================== Control Bar =================== */
+#button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+#button-container > button {
+    background-color: var(--btn-faded);
+}
+
+#button-container > .selected {
+    background-color: var(--btn-default);
+}
+
+#button-container > button:hover {
+    background-color: var(--btn-hover);
+}
+
+
+/* ================= Merge Container ================= */
+#merge-page-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    min-height: 45px;
+    max-height: 400px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+    margin-top: 6px;
+}
+
+#merge-container > p {
+    font-size: small;
+    margin-top: 0px;
+    margin-bottom: 7px;
+    color: grey;
+}
+
+#no-pages {
+    color: rgb(179, 179, 179);
+    width: 100%;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#merge-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+#merge-cancel-btn {
+    background-color: #8f0000;
+}
+
+#merge-cancel-btn:hover {
+    background-color: #c00000;
+}
+
+#merge-create-btn {
+    flex-grow: 1;
+    margin-left: 5px;
+}

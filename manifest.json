@@ -10,6 +10,7 @@
   },
 
   "description": "Enables users to take full-page PDF screenshots containing embedded text info.",
+  "homepage_url": "https://github.com/KevinOrbie/save-pdf",
   "permissions": ["activeTab", "contextMenus", "scripting", "tabs"],
 
   "icons": {
@@ -24,6 +25,12 @@
   "background": {
     "scripts": ["background-script.js"],
     "type": "module"
+  },
+
+  "action": {
+    "default_icon": "assets/icons/save-pdf.svg",
+    "default_title": "Save PDF",
+    "default_popup": "popup/popup.html"
   },
 
   "commands": {
