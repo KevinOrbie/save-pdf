@@ -33,6 +33,10 @@ function resetMergePages() {
     while(mergePages[0]) {
         mergePages[0].parentNode.removeChild(mergePages[0]);
     }
+
+    /* Reset page count. */
+    let pageCount = document.getElementById("page-count");
+    pageCount.innerText = mergePages.length;
 }
 
 function addMergePage(pageName) {
@@ -64,6 +68,7 @@ function onMergeClicked(event) {
 
 function onMergeCancelled(event) {
     commCancelMerge();
+    resetMergePages();
     selectMode("single");
     commSetMode("single");
 }
@@ -105,7 +110,6 @@ function commSetMode(mode) {
 
 async function commGetMode() {
     let response = await browser.runtime.sendMessage({ command: "get-mode" });
-    console.log("Recieved mode: ", response);
     return response.mode;
 }
 

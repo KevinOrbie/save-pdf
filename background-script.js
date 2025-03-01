@@ -290,19 +290,40 @@ async function takeScreenshot(tab) {
         warning += "Failed to get text from web page. "
     }
 
-    /* Step 5: Convert the screenshot to PDF. */
-    await notify(tab, "processing", "Saving PDF", {"warning": warning});
+    let mode = await getMode();
 
-    try {
-        await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
-    } catch(err) {
-        console.log("Failed to save PDF! ", err);
-        await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
-        return;
+    /* ---------------- Single Mode ---------------- */
+    if (mode === "single") {
+        /* Step 5a: Convert the screenshot to PDF. */
+        await notify(tab, "processing", "Saving PDF", {"warning": warning});
+
+        try {
+            await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
+        } catch(err) {
+            console.log("Failed to save PDF! ", err);
+            await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
+            return;
+        }
+
+        /* Notify user of succesfull save. */
+        await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
+
+    /* ---------------- Merge Mode ---------------- */
+    } else if (mode === "merge") {
+        /* Step 5b: Store the data to merge later. */
+        await notify(tab, "processing", "Storing page data", {"warning": warning});
+
+        try {
+            await storePageData(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
+        } catch(err) {
+            console.log("Failed to save PDF! ", err);
+            await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
+            return;
+        }
+
+        /* Notify user of succesfull storage. */
+        await notify(tab, "success", "Page ready for merging", {"image": imageUri, "warning": warning});
     }
-
-    /* Notify user of succesfull save. */
-    await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
 }
 
 /* ===================================== State Management ====================================== */
@@ -317,15 +338,54 @@ async function getMode() {
 }
 
 async function cancelMerge() {
-
+    await browser.storage.local.clear();
 }
 
 async function createMerge() {
+    
+}
 
+async function getPageIndex() {
+    let pageIndex = (await browser.storage.local.get("pageIndex")).pageIndex;
+    return (pageIndex) ? pageIndex : 0;
 }
 
 async function getMergePages() {
-    return ["Example of a page name 1", "Example of a page name 2", "Example of a page name 3"];
+    let pageIndex = await getPageIndex();
+
+    /* Assemble key values. */
+    let requests = [];
+    for (let index = 0; index < pageIndex; index++) {
+        requests.push(`page-${index}-metadata`);
+    }
+
+    /* Retrieve all metadata from storage. */
+    let metadata = await browser.storage.local.get(requests);
+    console.log(metadata);
+    
+    /* Extract all page names. */
+    let pageNames = [];
+    for (const key of requests) {
+        pageNames.push(metadata[key].name);
+    }
+
+    return pageNames;
+}
+
+async function storePageData(imgWidthPixels, imgHeightPixels, img, text, name) {
+    let pageIndex = await getPageIndex();
+
+    let blob = {};
+    blob[`page-${pageIndex}-text`]  = text;
+    blob[`page-${pageIndex}-image`] = img;
+    blob[`page-${pageIndex}-metadata`] = {
+        "name": name,
+        "wdith": imgWidthPixels,
+        "height": imgHeightPixels
+    };
+    blob["pageIndex"] = pageIndex + 1;
+
+    await browser.storage.local.set(blob)
 }
 
 /* ====================================== Event Listeners ====================================== */
