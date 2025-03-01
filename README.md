@@ -39,7 +39,7 @@ Processing Feedback |  Warning Feedback |  Failure Feedback |  Success Feedback
 
 ## Install
 Currently, this Web Extension is only available on Firefox. <br>
-You can install it via Firefox Add-ons.
+You can install it via [Firefox Add-ons](https://addons.mozilla.org/addon/save-pdf-screenshot/).
 
 ## About
 ### Known Issues
