@@ -305,6 +305,28 @@ async function takeScreenshot(tab) {
     await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
 }
 
+/* ===================================== State Management ====================================== */
+async function setMode(mode) {
+    // console.log("Setting Mode: ", mode);
+    await browser.storage.local.set({ "mode": mode });
+}
+
+async function getMode() {
+    // console.log("Getting Mode: ", await browser.storage.local.get("mode"));
+    return (await browser.storage.local.get("mode")).mode;
+}
+
+async function cancelMerge() {
+
+}
+
+async function createMerge() {
+
+}
+
+async function getMergePages() {
+    return ["Example of a page name 1", "Example of a page name 2", "Example of a page name 3"];
+}
 
 /* ====================================== Event Listeners ====================================== */
 // Listeners must be at the top-level to activate the background script if an event is triggered. 
@@ -345,3 +367,21 @@ browser.commands.onCommand.addListener(async (command) => {
     }
 });
 
+/**
+ * @brief Defines how to react to popup commands.
+ */
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log(`Processing Command: ${request.command}`);
+
+    switch (request.command) {
+        case "set-mode": setMode(request.mode).then(() => sendResponse()); break;
+        case "get-mode": getMode().then((mode) => sendResponse({"mode": mode})); break;
+        case "merge-cancel": cancelMerge().then(() => sendResponse()); break;
+        case "merge-create": createMerge().then(() => sendResponse()); break;
+        case "get-merge-pages": getMergePages().then((pages) => sendResponse({"pages": pages})); break;
+
+        default: console.log("Unknown request: ", request); break;
+    }
+
+    return true;
+});

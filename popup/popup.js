@@ -23,8 +23,6 @@ function selectMode(mode) {
             selectHeaderButton(document.getElementById("btn-header-single"));
             break;
     }
-
-    commSetMode(mode);
 }
 
 function resetMergePages() {
@@ -56,24 +54,24 @@ function addMergePage(pageName) {
 /* ============================ Event Handlers ============================= */
 function onSingleClicked(event) {
     selectMode("single");
-    console.log("Single Clicked!");
+    commSetMode("single");
 }
 
 function onMergeClicked(event) {
     selectMode("merge");
-    console.log("Merge Clicked!");
+    commSetMode("merge");
 }
 
 function onMergeCancelled(event) {
     commCancelMerge();
     selectMode("single");
-    console.log("Merge Cancelled!");
+    commSetMode("single");
 }
 
 function onMergeCreate(event) {
     commCreateMerge();
     selectMode("single");
-    console.log("Merge Completed!");
+    commSetMode("single");
 }
 
 /**
@@ -94,24 +92,35 @@ function initEventHandlers() {
 
 /* ============================= Communication ============================= */
 function commCancelMerge() {
-
+    browser.runtime.sendMessage({ command: "merge-cancel" });
 }
 
 function commCreateMerge() {
-
+    browser.runtime.sendMessage({ command: "merge-create" });
 }
 
 function commSetMode(mode) {
+    browser.runtime.sendMessage({ command: "set-mode", mode: mode });
+}
 
+async function commGetMode() {
+    let response = await browser.runtime.sendMessage({ command: "get-mode" });
+    console.log("Recieved mode: ", response);
+    return response.mode;
 }
 
 async function commGetMergePages() {
-    return ["Example page 1", "Example page 2", "Example page 3"];
+    let response = await browser.runtime.sendMessage({ command: "get-merge-pages" });
+    return response.pages;
 }
 
 /* ============================= Entry Point =============================== */
 window.addEventListener("DOMContentLoaded", async function() {
     initEventHandlers();
+
+    /* Get the current mode. */
+    let mode = await commGetMode();
+    selectMode(mode);
 
     /* Get all merge pages from background. */
     let mergePageNames = await commGetMergePages();
