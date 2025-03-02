@@ -339,7 +339,6 @@ async function getMode() {
 
 async function cancelMerge() {
     await browser.storage.local.clear();
-    // TODO: Add 3, 2, 1 click countdown to make sure.
 }
 
 async function createMerge() {

@@ -139,6 +139,8 @@ function initEventHandlers() {
 }
 
 /* ============================= Communication ============================= */
+/* These functions are used to communicate with the background script. */
+
 function commCancelMerge() {
     browser.runtime.sendMessage({ command: "merge-cancel" });
 }
