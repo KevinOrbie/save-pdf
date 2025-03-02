@@ -306,7 +306,7 @@ async function takeScreenshot(tab) {
         }
 
         /* Notify user of succesfull save. */
-        await notify(tab, "success", "Saved PDF File", {"image": imageUri, "warning": warning});
+        await notify(tab, "success", "Saved PDF File!", {"image": imageUri, "warning": warning});
 
     /* ---------------- Merge Mode ---------------- */
     } else if (mode === "merge") {
@@ -322,7 +322,7 @@ async function takeScreenshot(tab) {
         }
 
         /* Notify user of succesfull storage. */
-        await notify(tab, "success", "Page ready for merging", {"image": imageUri, "warning": warning});
+        await notify(tab, "success", "Acquired Page Data!", {"image": imageUri, "warning": warning});
     }
 }
 
@@ -339,10 +339,11 @@ async function getMode() {
 
 async function cancelMerge() {
     await browser.storage.local.clear();
+    // TODO: Add 3, 2, 1 click countdown to make sure.
 }
 
 async function createMerge() {
-    
+    // TODO: restructure how we generate the PDF, to allow for input array.
 }
 
 async function getPageIndex() {
