@@ -266,7 +266,7 @@ async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
 
         /* Add an image to the PDF. */
         console.log(`[backg] Adding Image: page = ${pageIndex}, x = ${0}, y = ${-pageIndex * (pdfPageHeight)}`);
-        pdf.addImage(img, 'png', 0, -pageIndex * (pdfPageHeight), pdfPageWidth, imgHeightPhysical, imageID);
+        pdf.addImage(img, 'png', 0, -pageIndex * (pdfPageHeight), pdfPageWidth, imgHeightPhysical, imageID);  // WARNING: Blocks Thread (seconds)
     }
 
     /* Add HTML text to PDF. */
