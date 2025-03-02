@@ -11,6 +11,41 @@ function selectHeaderButton(btn) {
     btn.className = "selected";
 }
 
+function cycleDeleteMerge() {
+    let container = document.getElementById("btn-merge-cancel");
+    let icon = container.firstElementChild;
+    let span = container.lastElementChild;
+    let finished = false;
+
+    switch (span.innerText) {
+        case "3": span.innerText = 2; break;
+        case "2": span.innerText = 1; break;
+
+        case "0":  // Icon --> Countdowm
+            span.innerText = 3; 
+            icon.style.display = "none";
+            span.style.display = "block";
+            break;
+
+        case "1":  // Countdowm --> Icon
+        default:
+            finished = true;
+            resetDeleteMerge();
+            break;
+    }
+
+    return finished;
+}
+
+function resetDeleteMerge() {
+    let container = document.getElementById("btn-merge-cancel");
+    let icon = container.firstElementChild;
+    let span = container.lastElementChild;
+    span.innerText = 0;
+    icon.style.display = "block";
+    span.style.display = "none";
+}
+
 /* =============================== Functions =============================== */
 function selectMode(mode) {
     switch (mode) {
@@ -66,11 +101,19 @@ function onMergeClicked(event) {
     commSetMode("merge");
 }
 
-function onMergeCancelled(event) {
-    commCancelMerge();
-    resetMergePages();
-    selectMode("single");
-    commSetMode("single");
+var deleteMergeTimeoutID = 0;
+function onMergeCancel(event) {
+    let cycleDone = cycleDeleteMerge();
+    if (cycleDone) {
+        commCancelMerge();
+        resetMergePages();
+        selectMode("single");
+        commSetMode("single");
+    }
+
+    /* Make sure the button resets after 1 sec of no interaction. */
+    clearTimeout(deleteMergeTimeoutID);
+    deleteMergeTimeoutID = setTimeout(resetDeleteMerge, 1000);
 }
 
 function onMergeCreate(event) {
@@ -88,7 +131,7 @@ function initEventHandlers() {
         switch (button.id) {
             case "btn-header-single":button.addEventListener("click", onSingleClicked ); break;
             case "btn-header-merge": button.addEventListener("click", onMergeClicked  ); break;
-            case "btn-merge-cancel": button.addEventListener("click", onMergeCancelled); break;
+            case "btn-merge-cancel": button.addEventListener("click", onMergeCancel   ); break;
             case "btn-merge-create": button.addEventListener("click", onMergeCreate   ); break;
             default: break;
         }

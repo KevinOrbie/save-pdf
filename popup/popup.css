@@ -114,6 +114,11 @@ button:hover {
     width: 100%;
 }
 
+#btn-merge-cancel > span {
+    display: none;
+    font-size: 16px;
+}
+
 #btn-merge-cancel {
     background-color: #8f0000;
 }
