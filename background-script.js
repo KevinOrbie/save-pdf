@@ -192,7 +192,31 @@ async function notify(tab, state, text, options) {
     return jsresult;
 }
 
-async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
+async function createMergePDF() {
+    let pdf = undefined;
+
+    /* Add each page screenshot one-by-one. */
+    const numWebPages = await getPageIndex();
+    for (let pageIndex = 0; pageIndex < numWebPages; pageIndex++) {
+        let query = [`page-${pageIndex}-text`, `page-${pageIndex}-image`, `page-${pageIndex}-metadata`];
+        let pageData = await browser.storage.local.get(query);
+
+        pdf = await addImageToPDF(
+            pageData[`page-${pageIndex}-metadata`].width, 
+            pageData[`page-${pageIndex}-metadata`].height, 
+            pageData[`page-${pageIndex}-image`], 
+            pageData[`page-${pageIndex}-text`], 
+            pdf
+        );
+    }
+
+    /* Clear all images. */
+    await cancelMerge();
+
+    return pdf;
+}
+
+async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
     const { jsPDF } = window.jspdf;
 
     /* Divide the page height. */
@@ -205,9 +229,10 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
 
     const pdfPageWidth = Math.ceil(imgWidthPixels / PPMM);  // mm
     const pdfPageHeight = Math.ceil(imgHeightPhysical / pdfNumPages);
+    const imageID = Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
 
-    console.log(`Saving PDF`, {
-        "name": name,
+    console.log(`Adding image to PDF`, {
+        "imageID": imageID,
         "Image Width (pixels)": imgWidthPixels,
         "Image Height (pixels)": imgHeightPixels,
         "Image PPMM": PPMM,
@@ -218,26 +243,38 @@ async function saveAsPDF(imgWidthPixels, imgHeightPixels, img, text, name) {
         "Image phyiscal height (mm)": imgHeightPhysical
     });
 
+    /* Create new PDF if not given. */
+    let addNewPage = true;
+    if (pdf == null) { // null || undefined
+        pdf = new jsPDF({ 
+            unit: "mm", 
+            format: [pdfPageWidth, pdfPageHeight], 
+            compress: true, 
+            orientation: (pdfPageWidth <= pdfPageHeight) ? "portrait" : "landscape" 
+        });
+        addNewPage = false;
+    }
+
     /* Generate PDF pages */
-    let pdf = new jsPDF({ 
-        unit: "mm", 
-        format: [pdfPageWidth, pdfPageHeight], 
-        compress: true, 
-        orientation: (pdfPageWidth <= pdfPageHeight) ? "portrait" : "landscape" 
-    });
     for (let pageIndex = 0; pageIndex < pdfNumPages; pageIndex++) {
-        if (pageIndex > 0) {
+        if (addNewPage) {
             pdf.addPage([pdfPageWidth, pdfPageHeight])
+        } else {
+            addNewPage = true;
         }
 
         /* Add an image to the PDF. */
         console.log(`Adding Image: page = ${pageIndex}, x = ${0}, y = ${-pageIndex * (pdfPageHeight)}`);
-        pdf.addImage(img, 'png', 0, -pageIndex * (pdfPageHeight), pdfPageWidth, imgHeightPhysical, name);
+        pdf.addImage(img, 'png', 0, -pageIndex * (pdfPageHeight), pdfPageWidth, imgHeightPhysical, imageID);
     }
 
     /* Add HTML text to PDF. */
     pdf.text(text, 0, 0, { renderingMode: "invisible", lineHeightFactor: 0 });
     
+    return pdf;
+}
+
+async function savePDF(pdf, name) {
     /* Save the PDF file. */
     let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
     pdf.save(filename);
@@ -293,12 +330,13 @@ async function takeScreenshot(tab) {
     let mode = await getMode();
 
     /* ---------------- Single Mode ---------------- */
-    if (mode === "single") {
+    if (mode === "single" || mode == null) {
         /* Step 5a: Convert the screenshot to PDF. */
         await notify(tab, "processing", "Saving PDF", {"warning": warning});
 
         try {
-            await saveAsPDF(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
+            let pdf = await addImageToPDF(pageSize.width, pageSize.height, imageUri, imageText);
+            await savePDF(pdf, tab.title);
         } catch(err) {
             console.log("Failed to save PDF! ", err);
             await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
@@ -342,7 +380,8 @@ async function cancelMerge() {
 }
 
 async function createMerge() {
-    // TODO: restructure how we generate the PDF, to allow for input array.
+    let pdf = await createMergePDF();
+    await savePDF(pdf, "merge");
 }
 
 async function getPageIndex() {
@@ -380,7 +419,7 @@ async function storePageData(imgWidthPixels, imgHeightPixels, img, text, name) {
     blob[`page-${pageIndex}-image`] = img;
     blob[`page-${pageIndex}-metadata`] = {
         "name": name,
-        "wdith": imgWidthPixels,
+        "width": imgWidthPixels,
         "height": imgHeightPixels
     };
     blob["pageIndex"] = pageIndex + 1;
