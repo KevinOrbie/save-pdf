@@ -258,7 +258,7 @@ async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
     /* Generate PDF pages */
     for (let pageIndex = 0; pageIndex < pdfNumPages; pageIndex++) {
         if (addNewPage) {
-            pdf.addPage([pdfPageWidth, pdfPageHeight])
+            pdf.addPage([pdfPageWidth, pdfPageHeight], (pdfPageWidth <= pdfPageHeight) ? "portrait" : "landscape" )
         } else {
             addNewPage = true;
         }
@@ -275,9 +275,11 @@ async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
 }
 
 async function savePDF(pdf, name) {
-    /* Save the PDF file. */
-    let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
-    pdf.save(filename);
+    if (pdf) {
+        /* Save the PDF file. */
+        let filename = `${(new Date()).toISOString().replaceAll(":", "").replace("T", "-").replace(".","").replace("Z", "")}-${encodeURIComponent(name).replaceAll("%20","")}.pdf`;
+        pdf.save(filename);
+    }
 }
 
 async function takeScreenshot(tab) {
@@ -400,7 +402,6 @@ async function getMergePages() {
 
     /* Retrieve all metadata from storage. */
     let metadata = await browser.storage.local.get(requests);
-    console.log(metadata);
     
     /* Extract all page names. */
     let pageNames = [];

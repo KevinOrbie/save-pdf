@@ -114,6 +114,7 @@ button:hover {
     width: 100%;
 }
 
+/* ------------ Cancel Button ------------ */
 #btn-merge-cancel > span {
     display: none;
     font-size: 16px;
@@ -127,7 +128,69 @@ button:hover {
     background-color: #c00000;
 }
 
+/* ------------ Create Button ------------ */
 #btn-merge-create {
     flex-grow: 1;
     margin-left: 5px;
 }
+
+#btn-merge-create-load,
+#btn-merge-create-load div {
+  box-sizing: border-box;
+}
+#btn-merge-create-load {
+  display: none;
+  position: relative;
+  width: 70px;
+  height: 16px;
+}
+#btn-merge-create-load div {
+  position: absolute;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+#btn-merge-create-load div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+#btn-merge-create-load div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+#btn-merge-create-load div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+#btn-merge-create-load div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+

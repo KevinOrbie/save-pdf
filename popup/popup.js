@@ -46,17 +46,17 @@ function resetDeleteMerge() {
     span.style.display = "none";
 }
 
-/* =============================== Functions =============================== */
-function selectMode(mode) {
-    switch (mode) {
-        case "merge": 
-            selectHeaderButton(document.getElementById("btn-header-merge"));
-            break;
+function updateMergeBtn(loading) {
+    let container = document.getElementById("btn-merge-create");
+    let span = container.firstElementChild;
+    let icon = container.lastElementChild;
 
-        case "single":
-        default: 
-            selectHeaderButton(document.getElementById("btn-header-single"));
-            break;
+    if (loading === true) {
+        span.style.display = "none";
+        icon.style.display = "inline-block";
+    } else {
+        span.style.display = "block";
+        icon.style.display = "none";
     }
 }
 
@@ -72,6 +72,20 @@ function resetMergePages() {
     /* Reset page count. */
     let pageCount = document.getElementById("page-count");
     pageCount.innerText = mergePages.length;
+}
+
+/* =============================== Functions =============================== */
+function selectMode(mode) {
+    switch (mode) {
+        case "merge": 
+            selectHeaderButton(document.getElementById("btn-header-merge"));
+            break;
+
+        case "single":
+        default: 
+            selectHeaderButton(document.getElementById("btn-header-single"));
+            break;
+    }
 }
 
 function addMergePage(pageName) {
@@ -116,10 +130,17 @@ function onMergeCancel(event) {
     deleteMergeTimeoutID = setTimeout(resetDeleteMerge, 1000);
 }
 
-function onMergeCreate(event) {
-    commCreateMerge();
+async function onMergeCreate(event) {
+    updateMergeBtn(true);
+    await commCreateMerge();
+    updateMergeBtn(false);
+
+    /* Reset mode to single. */
     selectMode("single");
     commSetMode("single");
+
+    /* Clear old pages from view. */
+    resetMergePages();
 }
 
 /**
@@ -145,8 +166,8 @@ function commCancelMerge() {
     browser.runtime.sendMessage({ command: "merge-cancel" });
 }
 
-function commCreateMerge() {
-    browser.runtime.sendMessage({ command: "merge-create" });
+async function commCreateMerge() {
+    await browser.runtime.sendMessage({ command: "merge-create" });
 }
 
 function commSetMode(mode) {
