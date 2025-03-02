@@ -1,3 +1,10 @@
+/**
+ * @brief Implements popup logic.
+ * 
+ * @file popup.js
+ * @author Kevin Orbie
+ */
+
 /* ================================= Layout ================================ */
 function selectHeaderButton(btn) {
     /* Deselect all header buttons. */

@@ -194,6 +194,7 @@ async function notify(tab, state, text, options) {
 
 async function createMergePDF() {
     let pdf = undefined;
+    console.log("[backg] Creating Merged PDF.");
 
     /* Add each page screenshot one-by-one. */
     const numWebPages = await getPageIndex();
@@ -231,7 +232,7 @@ async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
     const pdfPageHeight = Math.ceil(imgHeightPhysical / pdfNumPages);
     const imageID = Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
 
-    console.log(`Adding image to PDF`, {
+    console.log(`[backg] Adding image to PDF`, {
         "imageID": imageID,
         "Image Width (pixels)": imgWidthPixels,
         "Image Height (pixels)": imgHeightPixels,
@@ -264,7 +265,7 @@ async function addImageToPDF(imgWidthPixels, imgHeightPixels, img, text, pdf) {
         }
 
         /* Add an image to the PDF. */
-        console.log(`Adding Image: page = ${pageIndex}, x = ${0}, y = ${-pageIndex * (pdfPageHeight)}`);
+        console.log(`[backg] Adding Image: page = ${pageIndex}, x = ${0}, y = ${-pageIndex * (pdfPageHeight)}`);
         pdf.addImage(img, 'png', 0, -pageIndex * (pdfPageHeight), pdfPageWidth, imgHeightPhysical, imageID);
     }
 
@@ -313,7 +314,7 @@ async function takeScreenshot(tab) {
             rect: { x: 0, y: 0, width: pageSize.width, height: pageSize.height }
         });
     } catch(err) {
-        console.log("Failed to take screenshot! ", err);
+        console.log("[backg] Failed to take screenshot! ", err);
         await notify(tab, "failure", "Failed to take screenshot!", {"warning": warning, "details": err.toString()});
         return;
     }
@@ -325,7 +326,7 @@ async function takeScreenshot(tab) {
     try {
         imageText = await getPageText(tab);
     } catch(err) {
-        console.log("Failed to get text from web page. ", err);
+        console.log("[backg] Failed to get text from web page. ", err);
         warning += "Failed to get text from web page. "
     }
 
@@ -340,7 +341,7 @@ async function takeScreenshot(tab) {
             let pdf = await addImageToPDF(pageSize.width, pageSize.height, imageUri, imageText);
             await savePDF(pdf, tab.title);
         } catch(err) {
-            console.log("Failed to save PDF! ", err);
+            console.log("[backg] Failed to save PDF! ", err);
             await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
             return;
         }
@@ -356,7 +357,7 @@ async function takeScreenshot(tab) {
         try {
             await storePageData(pageSize.width, pageSize.height, imageUri, imageText, tab.title);
         } catch(err) {
-            console.log("Failed to save PDF! ", err);
+            console.log("[backg] Failed to save PDF! ", err);
             await notify(tab, "failure", "Failed to save PDF!", {"warning": warning, "details": err.toString()});
             return;
         }
@@ -368,12 +369,12 @@ async function takeScreenshot(tab) {
 
 /* ===================================== State Management ====================================== */
 async function setMode(mode) {
-    // console.log("Setting Mode: ", mode);
+    // console.log("[backg] Setting Mode: ", mode);
     await browser.storage.local.set({ "mode": mode });
 }
 
 async function getMode() {
-    // console.log("Getting Mode: ", await browser.storage.local.get("mode"));
+    // console.log("[backg] Getting Mode: ", await browser.storage.local.get("mode"));
     return (await browser.storage.local.get("mode")).mode;
 }
 
@@ -435,7 +436,7 @@ async function storePageData(imgWidthPixels, imgHeightPixels, img, text, name) {
  * @brief What to run when the application is first installed
  */
 browser.runtime.onInstalled.addListener(() => {
-    console.log("Installed Extension.");
+    console.log("[backg] Installed Extension.");
 
     /* Defines menu items */
     browser.contextMenus.create({
@@ -449,7 +450,7 @@ browser.runtime.onInstalled.addListener(() => {
  * @brief Defines how to react to clicking on a menu item.
  */
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
-    console.log("On Clicked called!");
+    console.log("[backg] ContextMenu item clicked: ", info.menuItemId);
 
     switch (info.menuItemId) {
       case "saveAsPDF": await takeScreenshot(tab); break;
@@ -471,7 +472,7 @@ browser.commands.onCommand.addListener(async (command) => {
  * @brief Defines how to react to popup commands.
  */
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(`Processing Command: ${request.command}`);
+    console.log(`[backg] Popup Command: ${request.command}`);
 
     switch (request.command) {
         case "set-mode": setMode(request.mode).then(() => sendResponse()); break;
@@ -480,7 +481,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case "merge-create": createMerge().then(() => sendResponse()); break;
         case "get-merge-pages": getMergePages().then((pages) => sendResponse({"pages": pages})); break;
 
-        default: console.log("Unknown request: ", request); break;
+        default: console.log("[backg] Unknown request: ", request); break;
     }
 
     return true;
